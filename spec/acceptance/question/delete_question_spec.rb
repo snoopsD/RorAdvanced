@@ -7,13 +7,12 @@ feature 'Delete question', %q{
 } do
 
   given(:user)       { create(:user) }
-  given(:question)   { create(:question, user: user) }
+  given(:question)   { create(:question, user: user)  }
 
   scenario 'Authenticated user delete own question' do
     sign_in(user)
 
     visit question_path(question)
-    save_and_open_page
     click_on 'Delete question'
 
     expect(current_path).to eq questions_path

@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.create(question_params)
+    @question = current_user.question.create(question_params)
 
     if @question.save
       flash[:notice] = 'Your question successfully created.'
