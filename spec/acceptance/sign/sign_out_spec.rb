@@ -9,9 +9,12 @@ feature 'user sig out', %q{
   given(:user) { create(:user) }
 
   scenario 'Registered user try to sign out' do
-    sign_out(user)
 
+    sign_in(user)
     expect(page).to have_content 'Signed in successfully.'
+    click_on 'Log out'
+
+    expect(page).to have_content "Signed out successfully."
     expect(current_path).to eq root_path
   end
 end
