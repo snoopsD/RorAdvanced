@@ -1,22 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer) }
 
-  describe 'GET #new' do
-    before { get :new, params: { question_id: question } }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
 
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'render new view' do
-      expect(response).to render_template :new
-    end
-  end
 
   describe 'POST #create' do
+    sign_in_user
 
     context 'with valide attributes' do
       it 'save new answer in database' do
@@ -36,8 +28,42 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-render new view' do
         post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }
-        expect(response).to render_template :new
+        expect(response).to render_template :create
       end
     end
   end
+
+  describe 'DELETE#destroy' do
+    sign_in_user
+
+    before { answer }
+
+    context 'Author answer' do
+      before { allow(controller).to receive(:current_user).and_return(user) }
+
+      it 'delete answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
+      end
+
+      it "render template delete" do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'NotAuthor answer' do
+      let(:other_user)     { create(:user) }
+      let(:answer)         { create(:answer, question: question, user: other_user) }
+
+      it 'delete answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
+      end
+
+      it 'render template delete' do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to redirect_to questions_path(question)
+      end
+    end
+  end
+
 end

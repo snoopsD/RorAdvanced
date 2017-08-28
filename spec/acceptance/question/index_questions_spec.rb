@@ -6,10 +6,13 @@ feature 'view question', %q{
   I want to be view questions
 } do
 
-  given!(:questions) { create_list(:question, 3) }
+  given(:user) { create(:user) }
+  given!(:questions) { create_list(:question, 3, user: user) }
 
   scenario 'All users view questions' do
     visit questions_path
+
+    expect(page).to have_content('MyString', count: 3)
   end
 
 end
