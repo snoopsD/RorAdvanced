@@ -6,8 +6,9 @@ feature 'create answer on question', %q{
   I want to be able send answer
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  given(:user)       { create(:user) }
+  given(:other_user) { create(:user) }
+  given(:question)   { create(:question, user: user) }
 
   scenario 'Authethicated user can answer to question' do
     sign_in(user)

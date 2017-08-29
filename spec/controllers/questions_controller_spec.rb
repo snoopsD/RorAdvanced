@@ -123,15 +123,31 @@ RSpec.describe QuestionsController, type: :controller do
     sign_in_user
 
     before { question }
-    before { allow(controller).to receive(:current_user).and_return(user) }
 
-    it 'deletes question' do
-      expect { delete :destroy, params: { id: question }}.to change(Question, :count).by(-1)
+    context 'Author question' do
+      let(:question) { create(:question, user: @user) }
+
+      it 'deletes question' do
+        expect { delete :destroy, params: { id: question} }.to change(Question, :count).by(-1)
+      end
+
+      it "render template delete" do
+        delete :destroy, params: { id: question}
+        expect(response).to redirect_to questions_path
+      end
     end
 
-    it 'redirect index view' do
-      delete :destroy, params: { id: question , format: :js}
-      expect(response).to redirect_to questions_path
+    context 'NotAuthor question' do
+
+      it 'delete question' do
+        expect { delete :destroy, params: { id: question} }.not_to change(Question, :count)
+      end
+
+      it 'render template delete' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to question_path(assigns(:question))
+      end
     end
+
   end
 end

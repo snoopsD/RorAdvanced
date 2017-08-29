@@ -12,6 +12,7 @@ class AnswersController < ApplicationController
       redirect_to question_path(@question)
     else
       flash[:notice] = 'Your answer not created'
+      render 'questions/show'
     end
   end
 
@@ -21,7 +22,7 @@ class AnswersController < ApplicationController
       flash[:notice] =  'Your answer deleted.'
       redirect_to question_path(@question)
     else
-      flash[:notice]=  'You are not author.'
+      redirect_to question_path(@question), notice: 'You are not author.'
     end
   end
 

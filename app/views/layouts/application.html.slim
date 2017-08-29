@@ -11,5 +11,6 @@ html
     p .class="alert"  = alert
 
     - if user_signed_in?
-    = link_to 'Log out', destroy_user_session_path, :method => :delete
+      = link_to 'Log out', destroy_user_session_path, :method => :delete
+      br
     = yield

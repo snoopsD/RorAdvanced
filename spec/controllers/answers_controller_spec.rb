@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
 
-  let(:user) { create(:user) }
+  let(:user)     { create(:user) }
   let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question, user: user) }
+  let(:answer)   { create(:answer, question: question, user: user) }
 
 
   describe 'POST #create' do
@@ -12,7 +12,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valide attributes' do
       it 'save new answer in database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(@user.answers, :count).by(1)
       end
 
       it 'redirect to view question with answer' do
@@ -28,7 +28,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-render new view' do
         post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }
-        expect(response).to render_template :create
+        expect(subject).to render_template("questions/show")
       end
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe AnswersController, type: :controller do
     before { answer }
 
     context 'Author answer' do
-      before { allow(controller).to receive(:current_user).and_return(user) }
+      let!(:answer) { create(:answer, question: question, user: @user) }
 
       it 'delete answer' do
         expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
@@ -59,7 +59,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'render template delete' do
         delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to question_path(assigns(:question))
       end
     end
   end

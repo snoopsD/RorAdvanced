@@ -29,4 +29,9 @@ feature 'Delete answer', %q{
     expect(page).to_not have_content 'Delete answer'
   end
 
+  scenario 'NonAuthenticated user try delete answer' do
+    visit question_path(question)
+
+    expect(page).to_not have_content 'Delete answer'
+  end
 end
