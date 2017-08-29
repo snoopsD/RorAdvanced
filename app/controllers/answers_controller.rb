@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create]
-  before_action :set_question, only: [:new, :create]
+  before_action :set_question, only: [:new, :create, :destroy]
   before_action :set_answer, only: [:destroy]
 
   def create
@@ -19,6 +19,7 @@ class AnswersController < ApplicationController
     if current_user.owner?(@answer)
       @answer.destroy
       flash[:notice] =  'Your answer deleted.'
+      redirect_to question_path(@question)
     else
       flash[:notice]=  'You are not author.'
     end

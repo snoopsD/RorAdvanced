@@ -31,8 +31,8 @@ feature 'create question', %q{
     fill_in 'Body', with: nil
     click_on 'Create'
 
-    expect(page).to have_content 'Body can not be nil'
-    expect(page).to have_content 'Title can not be nil'
+    expect(page).to have_content 'Body can\'t be blank'
+    expect(page).to have_content 'Title can\'t be blank'
   end
 
   scenario 'Non-Authethicated user create question' do

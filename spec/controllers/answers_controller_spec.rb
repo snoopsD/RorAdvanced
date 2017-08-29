@@ -47,13 +47,11 @@ RSpec.describe AnswersController, type: :controller do
 
       it "render template delete" do
         delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to questions_path
+        expect(response).to redirect_to question_path(assigns(:question))
       end
     end
 
     context 'NotAuthor answer' do
-      let(:other_user)     { create(:user) }
-      let(:answer)         { create(:answer, question: question, user: other_user) }
 
       it 'delete answer' do
         expect { delete :destroy, params: { question_id: question, id: answer } }.not_to change(Answer, :count)
@@ -61,7 +59,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'render template delete' do
         delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to questions_path(question)
+        expect(response).to render_template :destroy
       end
     end
   end

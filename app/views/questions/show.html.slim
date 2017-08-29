@@ -6,5 +6,6 @@ br
 
 - if user_signed_in? && current_user.owner?(@question)
   = render "answers/form", question: @question, answer: @answer
+  br
   = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
   br
