@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:question) { create(:question, user: user) }
+  let(:user) { create(:user) }
 
   describe 'GET #index' do
-    let(:questions) { create_list(:question, 2) }
+
+    let(:questions) { create_list(:question, 2, user: user) }
     before { get :index }
 
     it 'populates an array of all questions' do
@@ -17,6 +19,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
+    sign_in_user
+
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -29,6 +33,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
+    sign_in_user
     before { get :new }
 
     it 'assigns a new Question to @question' do
@@ -41,6 +46,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #edit' do
+    sign_in_user
     before { get :edit, params: { id: question } }
 
     it 'assigns the request question to @question' do
@@ -53,9 +59,10 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
     context 'with valide attributes'do
       it 'save new question in database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirect to show view' do
@@ -77,6 +84,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    sign_in_user
     context 'valide attributes' do
       it 'assigns the request question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question) }
@@ -112,14 +120,17 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE#destroy' do
+    sign_in_user
+
     before { question }
+    before { allow(controller).to receive(:current_user).and_return(user) }
 
     it 'deletes question' do
       expect { delete :destroy, params: { id: question }}.to change(Question, :count).by(-1)
     end
 
     it 'redirect index view' do
-      delete :destroy, params: { id: question }
+      delete :destroy, params: { id: question , format: :js}
       expect(response).to redirect_to questions_path
     end
   end
