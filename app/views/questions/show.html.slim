@@ -1,4 +1,3 @@
-= render 'common/errors', resource: @question
 p = @question.title
 br
 p = @question.body
@@ -7,6 +6,6 @@ br
 - if user_signed_in?
   = render "answers/form", question: @question, answer: @answer
   br
-- if user_signed_in? && current_user.owner?(@question)
-  = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
-  br
+  - if current_user.owner?(@question)
+    = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
+    br
