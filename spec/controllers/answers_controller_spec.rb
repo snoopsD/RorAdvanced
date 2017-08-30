@@ -16,7 +16,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'save new answer in database with question' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(Answer.where(question: question), :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
       end
 
       it 'redirect to view question with answer' do
