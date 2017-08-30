@@ -15,13 +15,6 @@ RSpec.describe AnswersController, type: :controller do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(@user.answers, :count).by(1)
       end
 
-      it 'redirect to view question with answer' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(assigns(:question))
-      end
-    end
-
-    context 'with valide attributes' do
       it 'save new answer in database with question' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(Answer.where(question: question), :count).by(1)
       end
@@ -31,7 +24,6 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
-
 
     context 'with invalid attributes' do
       it 'does not save answer' do
