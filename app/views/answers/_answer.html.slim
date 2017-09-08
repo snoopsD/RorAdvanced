@@ -1,0 +1,4 @@
+p= answer.body
+
+- if user_signed_in? && current_user.owner?(answer)
+  = link_to 'Delete answer', question_answer_path(answer.question, answer), remote: true, method: :delete, data: { confirm: 'Are you sure?' }
