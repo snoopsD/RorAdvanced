@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance_helper'
 
 feature 'Delete answer', %q{
   In order to delete
@@ -11,7 +11,7 @@ feature 'Delete answer', %q{
   given(:question)   { create(:question, user: user)  }
   given!(:answer)    { create(:answer, question: question, user: user) }
 
-  scenario 'Authenticated user delete own answer' do
+  scenario 'Authenticated user delete own answer', js: true do
     sign_in(user)
 
     visit question_path(question)
@@ -21,7 +21,7 @@ feature 'Delete answer', %q{
     expect(page).to_not have_content 'Test answer'
   end
 
-  scenario 'Authenticated user delete not own answer' do
+  scenario 'Authenticated user delete not own answer', js: true do 
     sign_in(other_user)
 
     visit question_path(question)
@@ -29,7 +29,7 @@ feature 'Delete answer', %q{
     expect(page).to_not have_content 'Delete answer'
   end
 
-  scenario 'NonAuthenticated user try delete answer' do
+  scenario 'NonAuthenticated user try delete answer', js: true do
     visit question_path(question)
 
     expect(page).to_not have_content 'Delete answer'

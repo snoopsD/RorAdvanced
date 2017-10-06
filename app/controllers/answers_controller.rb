@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
-  before_action :set_question, only: [:new, :create, :destroy]
-  before_action :set_answer, only: [:destroy]
+  before_action :authenticate_user!, only: [:new, :create, :update]
+  before_action :set_question, only: [:new, :create, :destroy, :update]
+  before_action :set_answer, only: [:update, :destroy, :best]
 
   def create
     @answer = @question.answers.create(answer_params)
@@ -11,6 +11,21 @@ class AnswersController < ApplicationController
       flash[:notice] = 'Your answer created'
     else
       flash[:notice] = 'Your answer not created'
+    end
+  end
+
+  def best
+    if current_user.owner?(@answer)
+      @answer.check_best
+    end
+  end
+
+  def update
+    if current_user.owner?(@answer)
+      @answer.update(answer_params)
+      flash.now[:notice] = 'Your answer updated'
+    else
+      flash.now[:notice] = 'Your answer was not updated'
     end
   end
 

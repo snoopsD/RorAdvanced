@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance_helper'
 
 feature 'create answer on question', %q{
   In order to create answer to question
@@ -14,8 +14,6 @@ feature 'create answer on question', %q{
     visit questions_path(question)
     click_on "MyString"
 
-    expect(page).to have_content ("MyTextTextText1")
-    expect(page).to have_content ("MyTextTextText2")
-    expect(page).to have_content ("MyTextTextText3")
+    "#{answers.each {|answer| expect(page).to have_content answer.body } }"
   end
 end
