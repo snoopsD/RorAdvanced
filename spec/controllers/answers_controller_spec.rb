@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
 
   let(:user)     { create(:user) }
-  let(:question) { create(:question, user: user) }
+  let!(:question) { create(:question, user: user) }
   let(:answer)   { create(:answer, question: question, user: user) }
 
 
@@ -43,8 +43,7 @@ RSpec.describe AnswersController, type: :controller do
     before { answer }
 
     context 'Author answer' do
-      let!(:answer) { create(:answer, question: question, user: @user) }
-
+      let(:answer) { create(:answer, question: question, user: @user) }
       it 'delete answer' do
         expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
@@ -68,4 +67,44 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH#update' do
+    sign_in_user
+    let(:answer)   { create(:answer, question: question, user: @user) }
+
+    it 'assigns the request answer to @answer' do
+      patch :update, params: { id: answer, question_id: question, answer: attributes_for(:answer) }, format: :js
+      expect(assigns(:answer)).to eq answer
+    end
+
+    it 'changes answer attributes' do
+      patch :update, params: { question_id: question, id: answer, answer: { body: 'new body' } }, format: :js
+      answer.reload
+      expect(answer.body).to eq 'new body'
+    end
+
+    it 'render update template' do
+      patch :update, params: { question_id: question, id: answer, answer: attributes_for(:answer) }, format: :js
+      expect(response).to render_template :update
+    end
+  end
+
+  describe 'PATCH#best_answer' do
+    sign_in_user
+    let(:answer)   { create(:answer, question: question, user: user) }
+    let(:another_answer)   { create(:answer, question: question, user: user) }
+
+    before {question.update(user: @user) }
+
+    it 'choose answer best' do
+      patch :best_answer, params: {  question_id: question, id: answer}, format: :js
+      answer.reload
+      expect(answer).to be_best
+    end
+
+
+    it 'render update template' do
+      patch :best_answer, params: { question_id: question, id: answer, answer: attributes_for(:answer) }, format: :js
+      expect(response).to render_template :best_answer
+    end
+  end
 end
