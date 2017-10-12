@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance_helper'
 
 feature 'create answer on question', %q{
   In order to create answer to question
@@ -13,7 +13,9 @@ feature 'create answer on question', %q{
   scenario 'Authethicated user can answer to question', js: true do
     sign_in(user)
     visit question_path(question)
+
     fill_in 'Answer', with: 'Test answer'
+
     click_on 'Answer send'
 
     expect(current_path).to eq question_path(question)
@@ -22,6 +24,15 @@ feature 'create answer on question', %q{
     within '.answers' do
       expect(page). to have_content 'Test answer'
     end
+  end
+
+  scenario 'User try to create invalid answer', js: true do
+    sign_in(user)
+    visit question_path(question)
+
+    click_on 'Answer send'
+
+    expect(page).to have_content "Body is too short (minimum is 5 characters)"
   end
 
   scenario 'Non-Authethicated user cant answer to question', js: true do
