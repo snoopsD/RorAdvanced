@@ -3,7 +3,7 @@ require 'acceptance_helper'
 feature 'Add files to question', %q{
   In order ti illustrate my question
   As an author question's
-  I'd lie to be able attach files  
+  I'd like to be able attach files  
 } do
 
   given( :user) { create(:user) }
