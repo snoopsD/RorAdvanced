@@ -1,11 +1,14 @@
 .flash
 .answer-errors
 = form_for [@question, @answer], remote: true  do |f|
+
   = f.label :body, 'Answer'
   = f.text_area :body
+  p
   = f.fields_for :attachments do |a|
     = a.label :file
-    = a.file_field :file  
+    = a.file_field :file 
+  p
   = f.submit 'Answer send'
 
 

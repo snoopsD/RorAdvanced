@@ -36,6 +36,7 @@ gem 'launchy'
 gem 'jquery-rails'
 gem 'database_cleaner'
 gem 'carrierwave'
+gem 'cocoon'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

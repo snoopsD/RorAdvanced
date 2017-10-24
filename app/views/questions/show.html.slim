@@ -2,29 +2,46 @@ div id= "question-#{@question.id}"
  .question-data
     h3= @question.title
     p=  @question.body
-    p Attachments:
-    ul
-      -@question.attachments.each do |a|
-        li= link_to a.file.identifier, a.file.url
-         
-      end
 
+    -if @question.attachments.present?  
+      p Attachments:      
+      ul          
+       -@question.attachments.each do |a|
+        li= link_to a.file.identifier, a.file.url 
+        
+                     
     .answers
       = render @question.answers
 
     - if user_signed_in?
-     = render "answers/form"
+      = render "answers/form"
 
-     - if current_user.owner?(@question)
-      p= link_to 'Edit question', '', class: 'edit_question_link', data: { question_id: @question.id }
-      = form_for @question, html: {id: "edit-question-#{@question.id}"}, remote: true do |f|
-       = f.label :title, 'Question title'
-       = f.text_field :title
-       br
+      .edit-question 
+        -if current_user.owner?(@question)
+          p= link_to 'Edit question', '', class: 'edit_question_link', data: { question_id: @question.id }
+          p
+          = form_for @question, html: {id: "edit-question-#{@question.id}"}, remote: true do |f|
 
-       = f.label :body, 'Question body'
-       = f.text_area :body
-       = f.submit "Save question"
-       br
+            = f.label :title, 'Question title'
+            = f.text_field :title
+            br
+                  
+            = f.label :body, 'Question body'
+            = f.text_area :body
 
+            p Attachments:
+            .nested-fields
+              = f.fields_for :attachments do |a|
+                = a.object.file.identifier               
+                = link_to_remove_association "remove ", a
+                br                
+
+            .links
+              = link_to_add_association 'add file', f, :attachments, 
+                partial: 'common/attachment_fields'    
+        
+              br
+                  
+              = f.submit "Save question"              
+       
       = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
