@@ -1,7 +1,7 @@
 require 'acceptance_helper'
 
 feature 'Delete files to question', %q{
-  In order ti illustrate my question
+  In order to fix my question
   As user
   I want to be delete attach files  
 } do
