@@ -4,11 +4,11 @@ div id= "question-#{@question.id}"
     p=  @question.body
 
     -if @question.attachments.present?  
-      p Attachments:      
-      ul          
-       -@question.attachments.each do |a|
-        li= link_to a.file.identifier, a.file.url 
-        
+      p Attachments:
+      .attachments_question  
+        ul          
+          -@question.attachments.each do |a|
+            li= link_to a.file.identifier, a.file.url         
                      
     .answers
       = render @question.answers
@@ -16,8 +16,8 @@ div id= "question-#{@question.id}"
     - if user_signed_in?
       = render "answers/form"
 
-      .edit-question 
-        -if current_user.owner?(@question)
+      -if current_user.owner?(@question)
+        .edit-question        
           p= link_to 'Edit question', '', class: 'edit_question_link', data: { question_id: @question.id }
           p
           = form_for @question, html: {id: "edit-question-#{@question.id}"}, remote: true do |f|
@@ -44,4 +44,4 @@ div id= "question-#{@question.id}"
                   
               = f.submit "Save question"              
        
-      = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
+        = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }

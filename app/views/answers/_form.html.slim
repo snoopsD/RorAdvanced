@@ -4,11 +4,14 @@
 
   = f.label :body, 'Answer'
   = f.text_area :body
-  p
+  
+  p Attachements:
   = f.fields_for :attachments do |a|
-    = a.label :file
-    = a.file_field :file 
-  p
+    = render 'common/attachment_fields', f: a
+
+  .links  
+    = link_to_add_association 'Add files', f, :attachments, partial: 'common/attachment_fields'
+    
   = f.submit 'Answer send'
 
 
