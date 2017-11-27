@@ -1,7 +1,19 @@
-= render 'common/errors', resource: @question
 = form_for @question do |f|
+
+  = render 'common/errors', resource: @question
+
   = f.label :title
   = f.text_field :title
+
   = f.label :body
   = f.text_field :body
+  
+  p Attachments:
+
+  = f.fields_for :attachments do |a|
+    = render 'common/attachment_fields', f: a
+
+  .links  
+    = link_to_add_association 'Add files', f, :attachments, partial: 'common/attachment_fields'
+
   = f.submit 'Create'
