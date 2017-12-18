@@ -11,9 +11,9 @@
   p Attachments:
 
   = f.fields_for :attachments do |a|
-    = render 'common/attachment_fields', f: a
-
+   = render 'common/attachment_fields', f: a
+ 
   .links  
-    = link_to_add_association 'Add files', f, :attachments, partial: 'common/attachment_fields'
+   = link_to_add_association 'Add files', f, :attachments, partial: 'common/attachment_fields'
 
   = f.submit 'Create'

@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  include Voted
+  
   before_action :authenticate_user!, only: [:new, :create]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
 
@@ -8,18 +10,16 @@ class QuestionsController < ApplicationController
 
   def show    
     @answer = @question.answers.new
-    @answer.attachments.build
   end
 
   def new
     @question = Question.new
-    @question.attachments.build
   end
 
   def edit
   end
 
-  def create
+  def create  
     @question = current_user.questions.new(question_params)
     if @question.save
       redirect_to @question, notice: 'Your question succefully created.'

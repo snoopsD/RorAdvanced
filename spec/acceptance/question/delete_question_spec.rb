@@ -14,7 +14,7 @@ feature 'Delete question', %q{
     sign_in(user)
 
     visit question_path(question)
-    
+   
     click_on 'Delete question'
 
     expect(current_path).to eq questions_path

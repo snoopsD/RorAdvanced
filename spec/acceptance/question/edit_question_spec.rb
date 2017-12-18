@@ -24,24 +24,23 @@ feature 'Editing question', %q{
     end
 
     scenario 'sees link to edit answer' do
-      within '.question-data' do
+      within '.edit-question' do
         expect(page).to have_link 'Edit question'
       end
     end
 
-    scenario ' try edit own question', js: true do
+    scenario 'try edit own question', js: true do
       click_on 'Edit question'
-
-      within '.question-data' do
+      within '.edit-question' do
         fill_in 'Question title', with: 'edited question title'
         fill_in 'Question body', with: 'edited question body'
-        click_on 'Save question'
-
-        expect(page).to_not have_content question.title
-        expect(page).to_not have_content question.body
-        expect(page).to have_content 'edited question title'
-        expect(page).to have_content 'edited question body'
+        click_on 'Save question' 
       end
+      
+      expect(page).to_not have_content question.title
+      expect(page).to_not have_content question.body     
+      expect(page).to have_content 'edited question title'
+      expect(page).to have_content 'edited question body'
     end
 
     scenario 'try edit not own question', js: true do
