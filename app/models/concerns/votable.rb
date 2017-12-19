@@ -17,10 +17,12 @@ module Votable
     votes.sum(:score)
   end  
 
-  private
+  private 
 
   def vote(score, user)
-    if votes.where(user: user, score: score).exists?
+    vote = votes.where(user: user, score: score)
+    
+    if vote.exists?
       votes.where(user: user).first.destroy
     else  
       votes.create(score: score, user: user)
