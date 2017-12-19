@@ -1,14 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  it_should_behave_like 'voted'
 
-  let(:user)     { create(:user) }
-  let!(:question) { create(:question, user: user) }
-  let(:answer)   { create(:answer, question: question, user: user) }
-
+  let!(:question) { create(:question) }
+  sign_in_user
 
   describe 'POST #create' do
-    sign_in_user
 
     context 'with valide attributes' do
       it 'save new answer in database with user' do
@@ -38,12 +36,9 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE#destroy' do
-    sign_in_user
-
-    before { answer }
 
     context 'Author answer' do
-      let(:answer) { create(:answer, question: question, user: @user) }
+      let!(:answer) { create(:answer, question: question, user: @user) }
       it 'delete answer' do
         expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
@@ -55,7 +50,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'NotAuthor answer' do
-
+      let!(:answer) { create(:answer, question: question, user: create(:user)) }
       it 'delete answer' do
         expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.not_to change(Answer, :count)
       end
@@ -90,8 +85,8 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH#best_answer' do
     sign_in_user
-    let(:answer)   { create(:answer, question: question, user: user) }
-    let(:another_answer)   { create(:answer, question: question, user: user) }
+    let(:answer)   { create(:answer, question: question, user: @user) }
+    let(:another_answer)   { create(:answer, question: question, user: @user) }
 
     before {question.update(user: @user) }
 

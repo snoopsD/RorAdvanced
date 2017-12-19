@@ -1,8 +1,17 @@
 div id= "question-#{@question.id}"
- .question-data
+  .question-data
     h3= @question.title
     p=  @question.body
+  
+  .q-vote  
+    .question-score   
+      p Question rating: #{@question.rate}
+      
+    -if user_signed_in? && !current_user.owner?(@question)  
+      =button_to '+', voteup_question_path(@question), remote: true
+      =button_to ' - ', votedown_question_path(@question), method: :post, remote: true, data: { type: :json }
 
+  .question-attachments
     -if @question.attachments.present?  
       p Attachments:
       .attachments_question  
@@ -10,38 +19,38 @@ div id= "question-#{@question.id}"
           -@question.attachments.each do |a|
             li= link_to a.file.identifier, a.file.url         
                      
-    .answers
-      = render @question.answers
+  .answers
+    = render @question.answers
 
-    - if user_signed_in?
+    -if user_signed_in?
       = render "answers/form"
 
-      -if current_user.owner?(@question)
-        .edit-question        
-          p= link_to 'Edit question', '', class: 'edit_question_link', data: { question_id: @question.id }
-          p
-          = form_for @question, html: {id: "edit-question-#{@question.id}"}, remote: true do |f|
+  -if user_signed_in? && current_user.owner?(@question)
+    .edit-question        
+      p= link_to 'Edit question', '', class: 'edit_question_link', data: { question_id: @question.id }
+      p
+      = form_for @question, html: {id: "edit-question-#{@question.id}"}, remote: true do |f|
 
-            = f.label :title, 'Question title'
-            = f.text_field :title
-            br
-                  
-            = f.label :body, 'Question body'
-            = f.text_area :body
+        = f.label :title, 'Question title'
+        = f.text_field :title
+        br
+              
+        = f.label :body, 'Question body'
+        = f.text_area :body
 
-            p Attachments:
-            .nested-fields
-              = f.fields_for :attachments do |a|
-                = a.object.file.identifier               
-                = link_to_remove_association "remove ", a
-                br                
+        p Attachments:
+        .nested-fields
+          = f.fields_for :attachments do |a|
+            = a.object.file.identifier               
+            = link_to_remove_association " remove ", a
+            br                
 
-            .links
-              = link_to_add_association 'add file', f, :attachments, 
-                partial: 'common/attachment_fields'    
-        
-              br
-                  
-              = f.submit "Save question"              
-       
-        = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }
+        .links
+          = link_to_add_association 'add file', f, :attachments, 
+            partial: 'common/attachment_fields'    
+    
+          br
+              
+          = f.submit "Save question"              
+  
+    = link_to 'Delete question', @question, method: :delete, data: { confirm: 'Are you sure?' }

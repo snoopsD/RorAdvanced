@@ -27,7 +27,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
+# Use ActiveModel has_secure_passwordь 
 # gem 'bcrypt', '~> 3.1.7'
 gem 'slim-rails'
 gem 'rails-controller-testing'
@@ -38,18 +38,18 @@ gem 'database_cleaner'
 gem 'carrierwave'
 gem 'cocoon'
 
-# Use Capistrano for deployment
+
+# Use Capistrano for //= require jquery.remotipartdeployment
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
-  #gem 'capybara', '~> 2.13'
   gem 'capybara'
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
-  gem "capybara-webkit"
+  gem 'factory_bot_rails'
+  gem 'capybara-webkit'  
 end
 
 group :test do

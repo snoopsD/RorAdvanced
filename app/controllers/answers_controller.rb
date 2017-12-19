@@ -1,17 +1,18 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_question, only: [:create, :destroy, :update]
-  before_action :set_answer, only: [:update, :destroy, :best_answer]
+  include Voted
 
+  before_action :set_answer, only: [:update, :destroy, :best_answer]
+  before_action :set_question, only: [:create]
+  
   def create
-    @answer = @question.answers.create(answer_params)
+    @answer = @question.answers.new(answer_params)
     @answer.user = current_user
 
     if @answer.save
-      flash[:notice] = 'Your answer created'
+      flash[:notice] = 'Your answer created'     
     else
       flash[:notice] = 'Your answer not created'
-    end
+    end    
   end
 
   def best_answer
@@ -28,10 +29,11 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.owner?(@answer)
-      @answer.destroy
+    @question = @answer.question
+    if current_user.owner?(@answer) 
+      @answer.destroy     
       flash[:notice] =  'Your answer deleted.'
-      redirect_to question_path(@question)
+      redirect_to question_path(@question)      
     else
       redirect_to question_path(@question), notice: 'You are not author.'
     end

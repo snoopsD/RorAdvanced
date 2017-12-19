@@ -9,7 +9,7 @@ feature 'Delete files to answer', %q{
   given(:user)       { create(:user) }
   given(:other_user) { create(:user) }
   given!(:question)   { create(:question, user: user)  }
-  given(:answer)   { create(:answer, question: question, user: user)  }
+  given!(:answer)   { create(:answer, question: question, user: user)  }
   given!(:attachment) { create(:attachment, attachable: answer) }
   
   scenario 'Non Authenticated user cant delete files answer' do
@@ -28,11 +28,15 @@ feature 'Delete files to answer', %q{
   scenario 'Authenticated user can delete own files answer', js: true do
     sign_in(user)
     visit question_path(question)
-    
+    #sleep(3000)
     within '.answers' do
+      
       click_on 'Edit'
+      
       click_on 'remove'
-      click_on 'Save'      
+      
+      click_on 'Save' 
+           
 
       expect(page).to_not have_content attachment.file.identifier      
     end

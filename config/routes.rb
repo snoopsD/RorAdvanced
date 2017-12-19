@@ -1,11 +1,18 @@
 Rails.application.routes.draw do
   devise_for :users
-
-  resources :questions do
-    resources :answers do
-      patch :best_answer, on: :member
+ 
+  concern :votable do
+    member do
+      post :voteup
+      post :votedown
     end
   end
 
-  root to: "questions#index"
+  resources :questions, concerns: [:votable] do
+    resources :answers, concerns: [:votable], shallow: true do
+      patch :best_answer, on: :member
+    end
+  end  
+
+  root to: "questions#index"  
 end

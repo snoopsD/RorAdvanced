@@ -27,11 +27,11 @@ feature 'Delete files to question', %q{
   scenario 'Authenticated user can delete own file question', js: true do
     sign_in(user)
     visit question_path(question)
-
+    
     within '.edit-question' do
       click_on "Edit question"
-      click_on "remove"    
-
+      click_on "remove"
+ 
       expect(page).to_not have_content attachment.file.identifier
     end
   end 

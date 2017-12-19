@@ -32,25 +32,25 @@ feature 'Editing answer', %q{
       end
     end
 
-    scenario ' try edit own answer', js: true do
-      click_on 'Edit'
-      within '.answers' do
+    scenario 'try edit own answer', js: true do
+      within '.answer-edit' do
+        click_on 'Edit'      
         fill_in 'Answer', with: 'edited answer'
-        click_on 'Save'
-
-        expect(page).to_not have_content answer.body
-        expect(page).to have_content 'edited answer'
-        expect(page).to_not have_selector 'textarea'
-      end
+      end  
+      click_on 'Save'        
+            
+      expect(page).to_not have_content answer.body
+      expect(page).to have_content 'edited answer'
     end
 
     scenario 'try edit not own answer', js: true do
-      visit question_path(another_question)
-
-      within '.answers' do
+      visit question_path(another_question)     
+   
+      within '.answers' do        
         expect(page).to_not have_link 'Edit'
-        expect(page).to_not have_selector 'textarea'
+        expect(page).to_not have_selector 'textarea[answer_body]'
       end
+      
     end
   end
 end
