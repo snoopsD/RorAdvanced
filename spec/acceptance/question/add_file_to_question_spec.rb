@@ -1,7 +1,7 @@
 require 'acceptance_helper'
 
 feature 'Add files to question', %q{
-  In order ti illustrate my question
+  In order to illustrate my question
   As an author question's
   I'd like to be able attach files  
 } do

@@ -11,5 +11,13 @@ ready = ->
     [data, status, xhr] = e.detail
     rates = xhr.responseText;
     $('.question-score').html "Question rating:" + rates
-$(document).ready(ready)  
+
+  App.cable.subscriptions.create('QuestionsChannel', {
+   connected: ->
+    @perform 'follow'
+   , 
+   received: (data) ->
+    $('.questions-list').append data
+  })  
+  
 $(document).on('turbolinks:load', ready)
